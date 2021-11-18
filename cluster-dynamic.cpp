@@ -2,8 +2,62 @@
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <raspicam/raspicam.h>
 using namespace std;
+
+// Einstellungsmöglichkeiten
+struct configuration {
+  int left;
+  int right;
+  int top;
+  int bottom;
+  int pin_red;
+  int pin_green;
+  int pin_blue;
+} config;
+
+void readConfig(string filename){
+  ifstream myfile;
+  myfile.open("config");
+  string myline;
+  if ( myfile.is_open() ) {
+    while ( myfile ) { // equivalent to myfile.good()
+      getline (myfile, myline);
+      if(myline.length() > 0) {
+        if(myline[0] != '#') {
+          istringstream is_line(myline);
+          string key;
+          if( std::getline(is_line, key, '=') )
+          {
+            std::string value;
+            if( std::getline(is_line, value) ) {
+              if(key == "left")
+                  config.left = stoi(value);
+              else if(key == "right")
+                  config.right = stoi(value);
+              else if(key == "top")
+                  config.top = stoi(value);
+              else if(key == "bottom")
+                  config.bottom = stoi(value);
+              else if(key == "pin-red")
+                  config.pin_red = stoi(value);
+              else if(key == "pin-green")
+                  config.pin_green = stoi(value);
+              else if(key == "pin-blue")
+                  config.pin_blue = stoi(value);
+              else
+                cout << "Nicht zugeordnet: " << key << '\n';
+            }
+          }
+        }
+      }
+    }
+  }
+  else {
+    cout << "Couldn't open file\n";
+  }
+}
 
 //Funktion für Clustering:
 
