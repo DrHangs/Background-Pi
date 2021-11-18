@@ -10,28 +10,28 @@ using namespace std;
 //höhe und breite angeben,
 //teilen und entsprechende Anzahl zusammenfassen
 struct rgbwert {
-	int red;
-	int green;
-	int blue;
+  int red;
+  int green;
+  int blue;
 };
 
 rgbwert kompresse(unsigned char *data, int fromwidth, int fromheight, int rowfrom, int rowto, int colfrom, int colto){
-	float r = 0.0, g = 0.0, b = 0.0;
-	int n = 0;
-	for ( int z=rowfrom; z<rowto; z++ ){
-		for ( int s=colfrom; s<colto; s++ ){
-			int first = (z * fromwidth + s) * 3;
-			r += data[first];
-			g += data[first + 1];
-			b += data[first + 2];
-			n++;
-		}
-	}
-	rgbwert result;
-	result.red = r / n;
-	result.green = g / n;
-	result.blue = b / n;
-	return result;
+  float r = 0.0, g = 0.0, b = 0.0;
+  int n = 0;
+  for ( int z=rowfrom; z<rowto; z++ ){
+    for ( int s=colfrom; s<colto; s++ ){
+      int first = (z * fromwidth + s) * 3;
+      r += data[first];
+      g += data[first + 1];
+      b += data[first + 2];
+      n++;
+    }
+  }
+  rgbwert result;
+  result.red = r / n;
+  result.green = g / n;
+  result.blue = b / n;
+  return result;
 }
 
 unsigned char* cluster(unsigned char *data, int fromwidth, int fromheight, int width, int height){
@@ -42,13 +42,13 @@ unsigned char* cluster(unsigned char *data, int fromwidth, int fromheight, int w
   for ( int z=0; z<height; z++ ){
     for ( int s=0; s<width; s++ ){
       int first = (z * width + s) * 3; // Erster Wert in Cluster-Wertereihe
-			int raw1 = (z * fromwidth * densehei + s * densewid) * 3;
-			rgbwert rgb = kompresse(data, fromwidth, fromheight, z*densehei, (z+1)*densehei, s*densewid, (s+1)*densewid);
-			clustered[first] = rgb.red;
-			clustered[first+1] = rgb.green;
-			clustered[first+2] = rgb.blue;
-		}
-	}
+      int raw1 = (z * fromwidth * densehei + s * densewid) * 3;
+      rgbwert rgb = kompresse(data, fromwidth, fromheight, z*densehei, (z+1)*densehei, s*densewid, (s+1)*densewid);
+      clustered[first] = rgb.red;
+      clustered[first+1] = rgb.green;
+      clustered[first+2] = rgb.blue;
+    }
+  }
   return clustered;
 }
 
@@ -98,8 +98,7 @@ int main ( int argc,char **argv ) {
   // Hier kommt das Clustering...
   int n;
   cout<<"Start clustering..."<<endl;
-  cout<<"Bild verkleinern um Faktor ?"<<endl;
-  cin >> n;
+  n=4;
   int wid =  Camera.getWidth() / n;
   int hei = Camera.getHeight() / n;
   unsigned char *clustered=new unsigned char[ wid * hei * 3 ];
@@ -111,11 +110,11 @@ int main ( int argc,char **argv ) {
   writePPM(sat, wid, hei, clustered);
   cout<<"Cluster saved at "<<sat<<endl;
   // Ende des Clusters
-	
+
   time ( &timer_end ); /* get current time; same as: timer = time(NULL)  */
   double secondsElapsed = difftime ( timer_end,timer_begin );
   cout<< secondsElapsed<<" seconds"<<endl;
-  //free resrources    
+  //free resrources
   delete data;
   delete clustered;
   Camera.release();
