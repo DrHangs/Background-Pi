@@ -1,0 +1,9 @@
+# configfile für backgroundpi
+left=20
+right=80
+top=20
+bottom=50
+pin-red=12
+pin-green=13
+pin-blue=14
+
