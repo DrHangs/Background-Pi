@@ -1,21 +1,17 @@
-CC = gcc
-OBJECTS = bkglight.o
-LIBS = -I/usr/local/include/ -L/usr/local/lib -lraspicam -lwiringPi
-CFLAGS = -Wall -O2
+CC = g++
+OBJECTS = bkglight.cpp
+LIBS = -I/usr/local/include/ -L/usr/local/lib -lraspicam -lwiringPi -lpthread
 BINDIR = $(DESTDIR)/usr/bin
 NAME = bkglight
 
 bkglight: $(OBJECTS)
-        $(CC) -o $(NAME) $(OBJECTS) $(LIBS)
-
-%.o: %.cpp
-        $(CC) -c $(CFLAGS) $<
+	$(CC) -o $(NAME) $(OBJECTS) $(LIBS)
 
 install:
-        install --mode=755 $(NAME) $(BINDIR)/
+	install --mode=755 $(NAME) $(BINDIR)/
 
 clean:
-        rm *.o $(NAME)
+	rm *.o $(NAME)
 
 uninstall:
-        rm $(BINDIR)/$(NAME)
+	rm $(BINDIR)/$(NAME)
