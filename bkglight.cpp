@@ -26,6 +26,7 @@ struct configuration {
   int pin_green=-1;
   int pin_blue=-1;
   int pin_conf=-1;
+  int ms_wait=-1;
 } config;
 
 void readConfig(string filename){
@@ -59,6 +60,8 @@ void readConfig(string filename){
                   config.pin_blue = stoi(value);
               else if(key == "pin-conf")
                   config.pin_conf = stoi(value);
+              else if(key == "ms-wait")
+                  config.ms_wait = stoi(value);
               else
                 cout << "Nicht zugeordnet: " << key << '\n';
             }
@@ -215,7 +218,7 @@ void mainloop(raspicam::RaspiCam Camera, unsigned char *data) {
     softPwmWrite(config.pin_red, red);
     softPwmWrite(config.pin_green, green);
     softPwmWrite(config.pin_blue, blue);
-    delay(10);
+    delay(config.ms_wait);
   }
   while(digitalRead(config.pin_conf) == 0) delay(10);
   btnpressed = false; // Reset as reaction complete

@@ -7,4 +7,4 @@ pin-red=6
 pin-green=10
 pin-blue=11
 pin-conf=5
-
+ms-wait=10
