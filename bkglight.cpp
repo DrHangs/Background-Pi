@@ -289,6 +289,9 @@ int main ( int argc,char *argv[] ) {
     softPwmWrite(config.pin_blue, blue);
     delay(10);
   }
+  softPwmWrite(config.pin_red, 0);
+  softPwmWrite(config.pin_green, 0);
+  softPwmWrite(config.pin_blue, 0);
   while(digitalRead(config.pin_conf) == 0) delay(10);
   }
 
