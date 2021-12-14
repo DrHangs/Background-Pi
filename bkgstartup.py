@@ -11,7 +11,7 @@ for line in conf_lines:
                 continue
         if(line.split('=')[0] == "pin-conf"):
                 conf_pin = line.split('=')[1]
-
+conf_pin = 17 # Unterschiedliche Nummerierung bei BCM und WiringPi
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(conf_pin, GPIO.IN, GPIO.PUD_UP)
 
