@@ -20,6 +20,14 @@ struct configuration {
 void readConfig(string filename){
   ifstream myfile;
   myfile.open("config");
+  if(!myfile) {
+    cout<<"Configfile doesn't exist, creating one with standard..."<<endl;
+    ofstream outfile;
+    outfile.open("config");
+    outfile<<"#configfile für backgroundpi, standardconfig\nleft=0\nright=0\ntop=0\nbottom=0\npin-red=0\npin-green=0\npin-blue=0"<<endl;
+    outfile.close();
+    myfile.open("config");
+  }
   string myline;
   if ( myfile.is_open() ) {
     while ( myfile ) { // equivalent to myfile.good()
@@ -47,7 +55,7 @@ void readConfig(string filename){
               else if(key == "pin-blue")
                   config.pin_blue = stoi(value);
               else
-                cout << "Nicht zugeordnet: " << key << '\n';
+                cout << "Nicht zugeordnet: " << key << endl;
             }
           }
         }
@@ -57,6 +65,7 @@ void readConfig(string filename){
   else {
     cout << "Couldn't open file\n";
   }
+  myfile.close()
 }
 
 //Funktion für Clustering:
