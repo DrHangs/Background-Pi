@@ -281,10 +281,10 @@ int main ( int argc,char *argv[] ) {
     savePic(Camera, data);
   } else {
    // mainloop(Camera, data);
-  cout<<"Start Gay-Mode with button-press..."<<endl;
-  while(digitalRead(config.pin_conf) == 1) delay(100);
-  while(digitalRead(config.pin_conf) == 0) delay(10); 
-  cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
+  //cout<<"Start Gay-Mode with button-press..."<<endl;
+  //while(digitalRead(config.pin_conf) == 1) delay(100);
+  //while(digitalRead(config.pin_conf) == 0) delay(10); 
+  //cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
   while(digitalRead(config.pin_conf) == 1){
     Camera.grab();
     Camera.retrieve(data);
