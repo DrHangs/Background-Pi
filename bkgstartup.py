@@ -20,6 +20,6 @@ while True:
                 time.sleep(0.1)
         while(GPIO.input(conf_pin) == 0):
                 time.sleep(0.01)
-        with open('history.log', mode='w') as f:
+        with open('history.log', mode='a') as f:
                 f.write(f"Started at {datetime.datetime.now()}" + os.linesep)
         os.system('./bkglight')
