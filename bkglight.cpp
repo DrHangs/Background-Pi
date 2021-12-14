@@ -81,7 +81,7 @@ void readConfig(string filename){
   else {
     cout << "Couldn't open file\n";
   }
-  myfile.close()
+  myfile.close();
 }
 
 bool validateConfig(){
