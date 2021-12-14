@@ -8,3 +8,7 @@ https://www.uco.es/investiga/grupos/ava/node/40
 ```
 $ g++ <inputfile>.cpp -o <outputfile> -I/usr/local/include/ -lraspicam
 ```
+Für WiringPi ähnlich:
+```
+$ g++ <inputfile>.cpp -o <outputfile> -I/usr/local/include -L/usr/local/lib -lwiringPi
+```
