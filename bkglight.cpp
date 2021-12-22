@@ -301,7 +301,7 @@ int main ( int argc,char *argv[] ) {
     int blue = (color.blue/2.55 + vorher.blue)/ 2;
 	
 	//Farbkorrektur
-	red = red * 2;
+	red = red * 1.4;
 	red = min(red, 100);
 	green = green * 0.7;
 	green = min(green, 100);
