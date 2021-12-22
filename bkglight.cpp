@@ -306,7 +306,7 @@ int main ( int argc,char *argv[] ) {
 	//blue = blue - 10;
 	//blue = max(blue, 0);
 	
-    if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<endl;
+    if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
     softPwmWrite(config.pin_red, red);
     softPwmWrite(config.pin_green, green);
     softPwmWrite(config.pin_blue, blue);
