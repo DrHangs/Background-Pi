@@ -296,15 +296,15 @@ int main ( int argc,char *argv[] ) {
     Camera.retrieve(data);
     rgbwert color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
 	
-    int red = (color.red/2.55 + vorher.red)/ 2;
-    int green = (color.green/2.55 + vorher.green)/ 2;
-    int blue = (color.blue/2.55 + vorher.blue)/ 2;
-	
 	//Farbkorrektur
-	red = red * 1.4;
+	int red = color.red * 1.4 / 2.55;
 	red = min(red, 100);
 	//blue = blue - 10;
 	//blue = max(blue, 0);
+	
+    red = (red + vorher.red)/ 2;
+    int green = (color.green/2.55 + vorher.green)/ 2;
+    int blue = (color.blue/2.55 + vorher.blue)/ 2;
 	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
     softPwmWrite(config.pin_red, red);
