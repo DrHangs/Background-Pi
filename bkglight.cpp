@@ -303,8 +303,8 @@ int main ( int argc,char *argv[] ) {
 	//Farbkorrektur
 	red = red * 1.4;
 	red = min(red, 100);
-	blue = blue - 10;
-	blue = max(blue, 0);
+	//blue = blue - 10;
+	//blue = max(blue, 0);
 	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<endl;
     softPwmWrite(config.pin_red, red);
