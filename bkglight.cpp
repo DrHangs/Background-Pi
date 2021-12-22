@@ -285,18 +285,29 @@ int main ( int argc,char *argv[] ) {
   //while(digitalRead(config.pin_conf) == 1) delay(100);
   //while(digitalRead(config.pin_conf) == 0) delay(10); 
   //cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
+  rgbwert vorher;
+  vorher.red = 0;
+  vorher.green = 0;
+  vorher.blue = 0;
+  
   while(digitalRead(config.pin_conf) == 1){
     Camera.grab();
     Camera.retrieve(data);
     rgbwert color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
-    int red = color.red/2.55;
-    int green = color.green/2.55;
-    int blue = color.blue/2.55;
+	
+    int red = (color.red/2.55 + vorher.red)/ 2;
+    int green = (color.green/2.55 + vorher.green)/ 2;
+    int blue = (color.blue/2.55 + vorher.blue)/ 2;
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<endl;
     softPwmWrite(config.pin_red, red);
     softPwmWrite(config.pin_green, green);
     softPwmWrite(config.pin_blue, blue);
-    delay(10);
+	
+	vorher.red = red;
+    vorher.green = green;
+    vorher.blue = blue;
+	
+    delay(config.ms_wait);
   }
   softPwmWrite(config.pin_red, 0);
   softPwmWrite(config.pin_green, 0);
