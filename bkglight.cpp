@@ -296,9 +296,9 @@ int main ( int argc,char *argv[] ) {
     Camera.retrieve(data);
     rgbwert color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
 	
-    int red = (color.red/2.55 + vorher.red * 10)/ 11;
-    int green = (color.green/2.55 + vorher.green * 10)/ 11;
-    int blue = (color.blue/2.55 + vorher.blue * 10)/ 11;
+    int red = (color.red/2.55 + vorher.red * 3)/ 4;
+    int green = (color.green/2.55 + vorher.green * 3)/ 4;
+    int blue = (color.blue/2.55 + vorher.blue * 3)/ 4;
 	
 	//Farbkorrektur
 	red = red * 1.4;
