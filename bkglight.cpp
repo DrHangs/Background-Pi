@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm> //Fuer Minimumberechnung
 #include <raspicam/raspicam.h>
 #include <wiringPi.h>
 #include <softPwm.h>
@@ -298,6 +299,13 @@ int main ( int argc,char *argv[] ) {
     int red = (color.red/2.55 + vorher.red)/ 2;
     int green = (color.green/2.55 + vorher.green)/ 2;
     int blue = (color.blue/2.55 + vorher.blue)/ 2;
+	
+	//Farbkorrektur
+	red = red * 2;
+	red = min(red, 100);
+	green = green * 0.7;
+	green = min(green, 100);
+	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<endl;
     softPwmWrite(config.pin_red, red);
     softPwmWrite(config.pin_green, green);
