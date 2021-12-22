@@ -285,7 +285,7 @@ int main ( int argc,char *argv[] ) {
   //while(digitalRead(config.pin_conf) == 1) delay(100);
   //while(digitalRead(config.pin_conf) == 0) delay(10); 
   //cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
-  rgbwert vorher;
+  rgbwert vorher; // Speichert den vorherigen Wert (in Prozent statt byte!)
   vorher.red = 0;
   vorher.green = 0;
   vorher.blue = 0;
