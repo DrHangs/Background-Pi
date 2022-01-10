@@ -28,6 +28,7 @@ struct configuration {
   int pin_blue=-1;
   int pin_conf=-1;
   int ms_wait=-1;
+  int smoothness=-1;
 } config;
 
 void readConfig(string filename){
@@ -71,6 +72,8 @@ void readConfig(string filename){
                   config.pin_conf = stoi(value);
               else if(key == "ms-wait")
                   config.ms_wait = stoi(value);
+              else if(key == "smoothness")
+                  config.smoothness = stoi(value);
               else
                 cout << "Nicht zugeordnet: " << key << endl;
             }
@@ -299,9 +302,9 @@ int main ( int argc,char *argv[] ) {
     Camera.retrieve(data);
     color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
 	
-    red = (color.red/2.55 + vorher.red * 4)/ 5;
-    green = (color.green/2.55 + vorher.green * 4)/ 5;
-    blue = (color.blue/2.55 + vorher.blue * 4)/ 5;
+    red = (color.red/2.55 + vorher.red * config.smoothness)/(config.smoothness+1);
+    green = (color.green/2.55 + vorher.green * config.smoothness)/(config.smoothness+1);
+    blue = (color.blue/2.55 + vorher.blue * config.smoothness)/(config.smoothness+1);
 	
 	vorher.red = red;
     vorher.green = green;

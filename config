@@ -8,3 +8,4 @@ pin-green=25
 pin-blue=24
 pin-conf=0
 ms-wait=10
+smoothness=10
