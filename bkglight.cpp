@@ -29,6 +29,11 @@ struct configuration {
   int pin_conf=-1;
   int ms_wait=-1;
   int smoothness=-1;
+  int percent_red=-1;
+  int percent_green=-1;
+  int percent_blue=-1;
+  int percent_brightness=-1
+  int base_brightness=-1
 } config;
 
 void readConfig(string filename){
@@ -74,6 +79,16 @@ void readConfig(string filename){
                   config.ms_wait = stoi(value);
               else if(key == "smoothness")
                   config.smoothness = stoi(value);
+              else if(key == "percent_red")
+                  config.percent_red = stoi(value);
+              else if(key == "percent_green")
+                  config.percent_green = stoi(value);
+              else if(key == "percent_blue")
+                  config.percent_blue = stoi(value);
+              else if(key == "percent_brightness")
+                  config.percent_brightness = stoi(value);
+              else if(key == "base_brightness")
+                  config.base_brightness = stoi(value);
               else
                 cout << "Nicht zugeordnet: " << key << endl;
             }
@@ -311,10 +326,9 @@ int main ( int argc,char *argv[] ) {
     vorher.blue = blue;
 	
 	//Farbkorrektur
-	red = red * 1.4;
-	red = min(red, 100);
-	blue = blue * 0.8;
-	blue = max(blue, 0);
+	red = min(0, max(100, red * config.percent_red/100 * config.percent_brightness/100 + config.base_brightness))
+	green = min(0, max(100, green * config.percent_green/100 * config.percent_brightness/100 + config.base_brightness))
+	blue = min(0, max(100, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness))
 	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
     softPwmWrite(config.pin_red, red);
