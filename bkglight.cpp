@@ -287,33 +287,36 @@ int main ( int argc,char *argv[] ) {
   //while(digitalRead(config.pin_conf) == 0) delay(10); 
   //cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
   rgbwert vorher; // Speichert den vorherigen Wert (in Prozent statt byte!)
+  rgbwert color;
   vorher.red = 0;
   vorher.green = 0;
   vorher.blue = 0;
-  
+  int red;
+  int green;
+  int blue;
   while(digitalRead(config.pin_conf) == 1){
     Camera.grab();
     Camera.retrieve(data);
-    rgbwert color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
+    color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
+	
+    red = (color.red/2.55 + vorher.red * 4)/ 5;
+    green = (color.green/2.55 + vorher.green * 4)/ 5;
+    blue = (color.blue/2.55 + vorher.blue * 4)/ 5;
+	
+	vorher.red = red;
+    vorher.green = green;
+    vorher.blue = blue;
 	
 	//Farbkorrektur
-	int red = color.red * 1.4 / 2.55;
+	red = red * 1.4;
 	red = min(red, 100);
 	//blue = blue - 10;
 	//blue = max(blue, 0);
-	
-    red = (red + vorher.red)/ 2;
-    int green = (color.green/2.55 + vorher.green)/ 2;
-    int blue = (color.blue/2.55 + vorher.blue)/ 2;
 	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
     softPwmWrite(config.pin_red, red);
     softPwmWrite(config.pin_green, green);
     softPwmWrite(config.pin_blue, blue);
-	
-	vorher.red = red;
-    vorher.green = green;
-    vorher.blue = blue;
 	
     delay(config.ms_wait);
   }
