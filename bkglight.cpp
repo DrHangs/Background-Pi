@@ -326,9 +326,9 @@ int main ( int argc,char *argv[] ) {
     vorher.blue = blue;
 	
 	//Farbkorrektur
-	red = min(0, max(100, red * config.percent_red/100 * config.percent_brightness/100 + config.base_brightness))
-	green = min(0, max(100, green * config.percent_green/100 * config.percent_brightness/100 + config.base_brightness))
-	blue = min(0, max(100, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness))
+	red = min(0, max(100, red * config.percent_red/100 * config.percent_brightness/100 + config.base_brightness));
+	green = min(0, max(100, green * config.percent_green/100 * config.percent_brightness/100 + config.base_brightness));
+	blue = min(0, max(100, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness));
 	
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
     softPwmWrite(config.pin_red, red);
