@@ -32,8 +32,8 @@ struct configuration {
   int percent_red=-1;
   int percent_green=-1;
   int percent_blue=-1;
-  int percent_brightness=-1
-  int base_brightness=-1
+  int percent_brightness=-1;
+  int base_brightness=-1;
 } config;
 
 void readConfig(string filename){
