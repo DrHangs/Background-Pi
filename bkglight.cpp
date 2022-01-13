@@ -240,13 +240,14 @@ void EchoToFile(string val)
     fo.close();
 }
 
-void WritePWM(int red, int green, int blue)
+string WritePWM(int red, int green, int blue)
 {
   string val = "";
-  val = to_string(bcmpinred) + "=" + getpercval(red) + " "; 
-  val = to_string(bcmpingreen) + "=" + getpercval(green) + " "; 
+  val = to_string(bcmpinred) + "=" + getpercval(red) + "; "; 
+  val = to_string(bcmpingreen) + "=" + getpercval(green) + "; "; 
   val = to_string(bcmpinblue) + "=" + getpercval(blue);
   EchoToFile(val);
+  return val;
 }
 
 // --------------------------------------------------------
@@ -306,6 +307,7 @@ int main ( int argc,char *argv[] ) {
   int red;
   int green;
   int blue;
+  string res;
   while(digitalRead(config.pin_conf) == 1){
     Camera.grab();
     Camera.retrieve(data);
@@ -325,7 +327,8 @@ int main ( int argc,char *argv[] ) {
     blue = min(100, max(0, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness));
 
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
-    WritePWM(red, green, blue);
+    res = WritePWM(red, green, blue);
+    if(isTest) cout<<res<<endl;
 	
     delay(config.ms_wait);
   }
