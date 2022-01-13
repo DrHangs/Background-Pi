@@ -1,7 +1,24 @@
 #!/usr/bin/env python3
 
 import RPi.GPIO as GPIO
-import time, datetime, os
+import time, datetime, os, psutil
+
+def findProcessIdByName(processName):
+    '''
+    Get a list of all the PIDs of a all the running process whose name contains
+    the given string processName
+    '''
+    listOfProcessObjects = []
+    #Iterate over the all the running process
+    for proc in psutil.process_iter():
+       try:
+           pinfo = proc.as_dict(attrs=['pid', 'name', 'create_time'])
+           # Check if process name contains the given name string.
+           if processName.lower() in pinfo['name'].lower() :
+               listOfProcessObjects.append(pinfo)
+       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
+           pass
+    return listOfProcessObjects
 
 with open("config") as f:
         conf_raw = f.read()
@@ -14,6 +31,8 @@ for line in conf_lines:
 conf_pin = 17 # Unterschiedliche Nummerierung bei BCM und WiringPi
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(conf_pin, GPIO.IN, GPIO.PUD_UP)
+if(len(findProcessIdByName("pi-blaster")) == 0):
+        os.system("pi-blaster --gpio 13,19,26")
 
 while True:
         while(GPIO.input(conf_pin) == 1):
