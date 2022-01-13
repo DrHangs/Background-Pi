@@ -6,3 +6,5 @@ cd pi-blaster
 ./configure
 make
 sudo make install
+sudo systemctl disable pi-blaster.service
+sudo systemctl stop pi-blaster.service

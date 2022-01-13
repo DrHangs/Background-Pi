@@ -12,10 +12,4 @@ https://github.com/sarfata/pi-blaster
 $ make bkglight
 ```
 
-Für die Bibliothek Pi-Blaster müssen die Standard-Pins geändert werden:
-```
-$ sudo pi-blaster --gpio <pin>,<pin>,<pin>
-```
-Dies wird bei jedem Programmstart ausgeführt.
-
 Für ein flackerfreies Erlebnis müssen im Pi-Blaster-Code pi-blaster.c die Werte SAMPLE_US und CYCLE_TIME_US angepasst werden, entsprechendes Verkleinern beider Werte erhöht die Hz des Signals. (Zum erneuten Kompilieren siehe install-Skript)

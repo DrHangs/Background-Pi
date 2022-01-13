@@ -32,6 +32,7 @@ conf_pin = 17 # Unterschiedliche Nummerierung bei BCM und WiringPi
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(conf_pin, GPIO.IN, GPIO.PUD_UP)
 if(len(findProcessIdByName("pi-blaster")) == 0):
+        # Standard-Pins von pi-blaster ändern
         os.system("pi-blaster --gpio 13,19,26")
 
 while True:
