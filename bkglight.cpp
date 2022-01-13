@@ -226,19 +226,10 @@ void setupPins(){
 
 string getpercval(int val)
 {
-  if(val >= 100) return str("1");
-  else if(val > 10) return str("0.")<<val;
-  else if (val <= 0) return str("0");
-  else return str("0.0")<<val;
-}
-
-void WritePWM(int red, int green, int blue)
-{
-  string val = "";
-  val<<bcmpinred<<"="<<getpercval(red)<<" "; 
-  val<<bcmpingreen<<"="<<getpercval(green)<<" "; 
-  val<<bcmpinblue<<"="<<getpercval(blue);
-  EchoToFile(val);
+  if(val >= 100) return "1";
+  else if(val > 10) return "0." + to_string(val);
+  else if (val <= 0) return "0";
+  else return "0.0" + to_string(val);
 }
 
 void EchoToFile(string val)
@@ -247,6 +238,15 @@ void EchoToFile(string val)
     fo.open("/dev/pi-blaster");
     fo << val << endl;
     fo.close();
+}
+
+void WritePWM(int red, int green, int blue)
+{
+  string val = "";
+  val = to_string(bcmpinred) + "=" + getpercval(red) + " "; 
+  val = to_string(bcmpingreen) + "=" + getpercval(green) + " "; 
+  val = to_string(bcmpinblue) + "=" + getpercval(blue);
+  EchoToFile(val);
 }
 
 // --------------------------------------------------------
