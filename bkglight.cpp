@@ -227,7 +227,7 @@ void setupPins(){
 string getpercval(int val)
 {
   if(val >= 100) return "1";
-  else if(val > 10) return "0." + to_string(val);
+  else if(val >= 10) return "0." + to_string(val);
   else if (val <= 0) return "0";
   else return "0.0" + to_string(val);
 }
