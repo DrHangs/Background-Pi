@@ -287,6 +287,8 @@ int main ( int argc,char *argv[] ) {
   Camera.setHeight (240);
   if ( !Camera.open()) {cerr<<"Error opening camera"<<endl;return false;}
   //wait a while until camera stabilizes
+  system("pi-blaster --gpio " + to_string(bcmpinred) + ',' 
+  + to_string(bcmpingreen) + ',' + to_string(bcmpinblue))
   cout<<"Sleeping for 2 secs"<<endl;
   sleep(2);
   time ( &timer_begin );
