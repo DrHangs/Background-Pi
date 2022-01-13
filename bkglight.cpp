@@ -243,9 +243,9 @@ void EchoToFile(string val)
 string WritePWM(int red, int green, int blue)
 {
   string val = "";
-  val = to_string(bcmpinred) + "=" + getpercval(red) + "; "; 
-  val = to_string(bcmpingreen) + "=" + getpercval(green) + "; "; 
-  val = to_string(bcmpinblue) + "=" + getpercval(blue);
+  val = val + to_string(bcmpinred) + "=" + getpercval(red) + "; "; 
+  val = val + to_string(bcmpingreen) + "=" + getpercval(green) + "; "; 
+  val = val + to_string(bcmpinblue) + "=" + getpercval(blue);
   EchoToFile(val);
   return val;
 }
