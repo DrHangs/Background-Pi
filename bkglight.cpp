@@ -202,55 +202,56 @@ void savePic(raspicam::RaspiCam Camera, unsigned char *data){
 
 // -------------------------------------------------------
 // Alles mit Pins...
-bool btnpressed = false;
+int bcmpinred, bcmpingreen, bcmpinblue;
 
-void switchInterrupt(void){
-  btnpressed = true;
+int mapWiringtoBCM(int wiring)
+{
+  if(wiring == 22) return 6;
+  if(wiring == 23) return 13;
+  if(wiring == 24) return 19;
+  if(wiring == 25) return 26;
+  // Für mehr Pins unter https://pinout.xyz/pinout/wiringpi# nachsehen
+  return 0;
 }
 
 void setupPins(){
   wiringPiSetup();
   pinMode(config.pin_conf, INPUT);
-  pinMode(config.pin_red, PWM_OUTPUT);
-  pinMode(config.pin_green, PWM_OUTPUT);
-  pinMode(config.pin_blue, PWM_OUTPUT);
 
   pullUpDnControl(config.pin_conf, PUD_UP);
-  //wiringPiISR(config.pin_conf, INT_EDGE_FALLING, &switchInterrupt);
+  bcmpinred = mapWiringtoBCM(config.pin_red);
+  bcmpingreen = mapWiringtoBCM(config.pin_green);
+  bcmpinblue = mapWiringtoBCM(config.pin_blue);
+}
 
-  softPwmCreate(config.pin_red, 0, 100);
-  softPwmCreate(config.pin_green, 0, 100);
-  softPwmCreate(config.pin_blue, 0, 100);
+string getpercval(int val)
+{
+  if(val >= 100) return str("1");
+  else if(val > 10) return str("0.")<<val;
+  else if (val <= 0) return str("0");
+  else return str("0.0")<<val;
+}
+
+void WritePWM(int red, int green, int blue)
+{
+  string val = "";
+  val<<bcmpinred<<"="<<getpercval(red)<<" "; 
+  val<<bcmpingreen<<"="<<getpercval(green)<<" "; 
+  val<<bcmpinblue<<"="<<getpercval(blue);
+  EchoToFile(val);
+}
+
+void EchoToFile(string val)
+{
+    ofstream fo;
+    fo.open("/dev/pi-blaster");
+    fo << val << endl;
+    fo.close();
 }
 
 // --------------------------------------------------------
 bool isTest = false;
 bool isPic = false;
-
-void mainloop(raspicam::RaspiCam Camera, unsigned char *data) {
-  cout<<"Start Gay-Mode with button-press..."<<endl;
-  //while(!btnpressed) delay(100);
-  while(digitalRead(config.pin_conf) == 1) delay(100);
-  while(digitalRead(config.pin_conf) == 0) delay(10);
-  btnpressed = false; // Reset as reaction complete
-  cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
-  //while(!btnpressed){
-  while(digitalRead(config.pin_conf) == 1){
-    Camera.grab();
-    Camera.retrieve(data);
-    rgbwert color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
-    int red = color.red/2.55;
-    int green = color.green/2.55;
-    int blue = color.blue/2.55;
-    if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<endl;
-    softPwmWrite(config.pin_red, red);
-    softPwmWrite(config.pin_green, green);
-    softPwmWrite(config.pin_blue, blue);
-    delay(config.ms_wait);
-  }
-  while(digitalRead(config.pin_conf) == 0) delay(10);
-  btnpressed = false; // Reset as reaction complete
-}
 
 int main ( int argc,char *argv[] ) {
   cout<<disclaimer<<endl;
@@ -276,21 +277,19 @@ int main ( int argc,char *argv[] ) {
   if(!validateConfig()){cout<<"No valid config, stopping program!"<<endl;return -1;}
   setupPins();
 
-  raspicam::RaspiCam Camera; //Camera object
-  //if(!setupCamera(Camera)) return -1;
-  //Open camera
+  raspicam::RaspiCam Camera;
   cout<<"Opening Camera..."<<endl;
   Camera.setFormat(raspicam::RASPICAM_FORMAT_RGB);
   //Sets camera width. Use a multiple of 320 (640, 1280)
   Camera.setWidth (320) ;
-  /**Sets camera Height. Use a multiple of 240 (480, 960)
-  */
+  //Sets camera Height. Use a multiple of 240 (480, 960)
   Camera.setHeight (240);
   if ( !Camera.open()) {cerr<<"Error opening camera"<<endl;return false;}
   //wait a while until camera stabilizes
   cout<<"Sleeping for 2 secs"<<endl;
   sleep(2);
   time ( &timer_begin );
+  
   //allocate memory
   unsigned char *data=new unsigned char[  Camera.getImageTypeSize ( raspicam::RASPICAM_FORMAT_RGB )];
   Camera.grab();
@@ -299,11 +298,6 @@ int main ( int argc,char *argv[] ) {
   if(isPic) {
     savePic(Camera, data);
   } else {
-   // mainloop(Camera, data);
-  //cout<<"Start Gay-Mode with button-press..."<<endl;
-  //while(digitalRead(config.pin_conf) == 1) delay(100);
-  //while(digitalRead(config.pin_conf) == 0) delay(10); 
-  //cout<<"Spreading Chem-Trails, interrupt with button-press..."<<endl;
   rgbwert vorher; // Speichert den vorherigen Wert (in Prozent statt byte!)
   rgbwert color;
   vorher.red = 0;
@@ -316,30 +310,26 @@ int main ( int argc,char *argv[] ) {
     Camera.grab();
     Camera.retrieve(data);
     color = kompresse(data, Camera.getWidth(), Camera.getHeight(), config.top, config.bottom, config.left, config.right);
-	
+
     red = (color.red/2.55 + vorher.red * config.smoothness)/(config.smoothness+1);
     green = (color.green/2.55 + vorher.green * config.smoothness)/(config.smoothness+1);
     blue = (color.blue/2.55 + vorher.blue * config.smoothness)/(config.smoothness+1);
-	
-	vorher.red = red;
+
+    vorher.red = red;
     vorher.green = green;
     vorher.blue = blue;
-	
-	//Farbkorrektur
-	red = min(100, max(0, red * config.percent_red/100 * config.percent_brightness/100 + config.base_brightness));
-	green = min(100, max(0, green * config.percent_green/100 * config.percent_brightness/100 + config.base_brightness));
-	blue = min(100, max(0, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness));
-	
+
+    //Farbkorrektur
+    red = min(100, max(0, red * config.percent_red/100 * config.percent_brightness/100 + config.base_brightness));
+    green = min(100, max(0, green * config.percent_green/100 * config.percent_brightness/100 + config.base_brightness));
+    blue = min(100, max(0, blue * config.percent_blue/100 * config.percent_brightness/100 + config.base_brightness));
+
     if(isTest) cout<<"Werte: "<<red<<":"<<green<<":"<<blue<<"--"<<color.red<<":"<<color.green<<":"<<color.blue<<endl;
-    softPwmWrite(config.pin_red, red);
-    softPwmWrite(config.pin_green, green);
-    softPwmWrite(config.pin_blue, blue);
+    WritePWM(red, green, blue);
 	
     delay(config.ms_wait);
   }
-  softPwmWrite(config.pin_red, 0);
-  softPwmWrite(config.pin_green, 0);
-  softPwmWrite(config.pin_blue, 0);
+  WritePWM(0,0,0);
   while(digitalRead(config.pin_conf) == 0) delay(10);
   }
 
